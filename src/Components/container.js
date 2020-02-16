@@ -1,55 +1,52 @@
-import React, {Component} from 'react';
+import React, { useState, useEffect } from 'react';
 import Frontcard from './frontCard';
 import Backcard from './backCard';
+// import { capitalize } from '../helpers';
 
-class Cardcontainer extends Component {
-    state= {
+const Card = ({name, details, handleClick}) =>
+    <div onClick={handleClick} className="flip-container">
+        <div className="card-container">
+            <Frontcard name={name} />
+            <Backcard details={details} />
+        </div>
+    </div>;
+
+const Cardcontainer = () => {
+    const [namesUrl] = useState('https://pokeapi.co/api/v2/pokemon/?limit=10');
+    const [state, setState] = useState({
         pokemon: [],
         cardBack: []
-    }
-    
-    async componentDidMount() {
-        const response = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=200')
-        const json = await response.json();
-        
-        const pokemon = json.results;
-        console.log(json.results)
-        this.setState({  pokemon: pokemon });
-      
-        Promise.all(pokemon.map(({ url }) => fetch(url).then(res => res.json())))
-        .then(cardBack => this.setState({ cardBack: cardBack }))}
+    });
+    useEffect(() => {
+        const doit = async () => {
+            const response = await fetch(namesUrl);
+            const json = await response.json();
+            console.log(json);
 
-      handleClick = (e) => {
-          e.currentTarget.firstChild.style.transform !== 'rotateY(180deg)'? e.currentTarget.firstChild.style.transform = 'rotateY(180deg)' : e.currentTarget.firstChild.style.transform=''
-          
-      }
+            const pokemon = json.results;
+            // console.log(json.results);
+            // setState({ ...state, pokemon: pokemon });
 
-      capitalizeName = (name) => {
-          return (
-              name.charAt(0).toUpperCase() + name.slice(1)
-              
-          )
-      }
-    
-      render() {
-       console.log(this.state)
-        return (
-            this.state.pokemon.map((poke, index)=>{
-                return (
-                   <div onClick={this.handleClick} className={'flip-container'}>
-                    <div  
-                        className={"card-container"} 
-                        key={index}
-                        >                  
-                        <Frontcard capital={this.capitalizeName} name={this.state.pokemon[index].name}/>
-                        <Backcard capital={this.capitalizeName} number={index} name={this.state.cardBack} />                      
-                    </div>
-                    
-                    </div>
-                )
-            })
-        )
-    }
- }
+            Promise.all(pokemon.map(({ url }) => fetch(url).then(res => res.json())))
+                .then(cardBack => setState({ pokemon, cardBack }));
+        };
+        doit();
+    }, [namesUrl]);
 
-    export default Cardcontainer;
+    const handleClick = e =>
+        e.currentTarget.firstChild.style.transform !== 'rotateY(180deg)'
+            ? e.currentTarget.firstChild.style.transform = 'rotateY(180deg)'
+            : e.currentTarget.firstChild.style.transform = ''
+        ;
+
+    console.log(state);
+    return (
+        <>
+            {state.pokemon.map((poke, index) =>
+                <Card key={index} name={poke.name} details={state.cardBack[index]} handleClick={handleClick} />
+            )}
+        </>
+    );
+};
+
+export default Cardcontainer;
