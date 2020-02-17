@@ -3,7 +3,7 @@ import { CardContainer} from './components/CardContainer';
 
 const App = () =>
     <div className="main-container">
-        <CardContainer />
+        <CardContainer limit={100} />
     </div>
     ;
 

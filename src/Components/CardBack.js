@@ -1,5 +1,5 @@
 import React from 'react';
-import { capitalize, useFetch } from '../helpers';
+import { capitalize } from '../helpers';
 
 const Container = ({ children }) =>
     <div className="card-back">{children}</div>;
@@ -14,7 +14,7 @@ const Sub2 = ({ className, children }) => <div className={`${className || ''} ca
 const Head = ({ name, id }) =>
     <>
         <Sub className="back-name">{name ? capitalize(name) : "Loading..."}</Sub>
-        {name && <img className="poke-pic2" alt="critterpic" src={`http://www.pokestadium.com/sprites/xy/${name}.gif`} /> }
+        {name && <img className="poke-pic2" alt="critterpic" src={`http://www.pokestadium.com/sprites/xy/${name}.gif`} />}
         <Sub className="back-num">#{id || ""}</Sub>
     </>;
 
@@ -36,15 +36,13 @@ const Types = ({ types }) =>
 const Loaded = ({ details }) =>
     <Container>
         <Head name={details.name} id={details.id} />
-        <Moves 
-        move1={capitalize(details.moves[0].move.name)}
-        moves2={capitalize(details.name === 'ditto' ? '' : details.moves[1].move.name)}
+        <Moves
+            move1={capitalize(details.moves[0].move.name)}
+            moves2={capitalize(details.name === 'ditto' ? '' : details.moves[1].move.name)}
         />
         <Types {...details} />
     </Container>
     ;
-
-
 
 const NotLoaded = () =>
     <Container>
@@ -54,14 +52,9 @@ const NotLoaded = () =>
     </Container>
     ;
 
-const Live = ({ url }) => {
-    const [fetchResult, loading] = useFetch(url);
-    console.log({ f: "Live", url, fetchResult, loading });
-    return loading ? <NotLoaded /> : <Loaded details={fetchResult} />;
-};
 
-export const CardBack = ({ url, live }) =>
-    !live ? <NotLoaded /> : <Live url={url} />;
+export const CardBack = ({ details }) =>
+    !details ? <NotLoaded /> : <Loaded details={details} />;
 
 
 /*

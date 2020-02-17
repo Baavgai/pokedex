@@ -12,8 +12,8 @@ const Loaded = ({ pokemon }) =>
     </>;
 
 
-export const CardContainer = () => {
-    const [fetchResult, loading] = useFetch('https://pokeapi.co/api/v2/pokemon/?limit=10');
+export const CardContainer = ({limit}) => {
+    const [fetchResult, loading] = useFetch(`https://pokeapi.co/api/v2/pokemon/?limit=${limit}`);
 
     /*
     const handleClick = e =>

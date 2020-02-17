@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 import { CardBack as Back } from './CardBack';
 import { capitalize } from '../helpers';
 import pokeLogo from './Photos/pokeLogo.png';
@@ -14,18 +14,29 @@ const Front = ({ name }) =>
     </div>
     ;
 
-export const Card = ({name, url}) => {
-    const [front, setFront] = React.useState(true);
-    // console.log({f: "card", front})
+export const Card = ({ name, url }) => {
+    const [flips, setFlips] = React.useState(0);
+    const [details, setDetails] = React.useState(undefined);
+    useEffect(() => {
+        if (flips === 1) {
+            let cancelled = false;
+            fetch(url)
+                .then(x => x.json())
+                .then(x => { if (!cancelled) { setDetails(x); } });
+            return () => { cancelled = true; };
+        }
+    }, [url, flips]);
+    const front = (flips % 2) === 0;
+    console.log({f: "card", name, flips, details})
     return (
-        <div className="flip-container" onClick={e => setFront(!front)}>
-            <div className="card-container" style={{transform: (front ? "" : "rotateY(180deg)")}} >
+        <div className="flip-container" onClick={e => setFlips(flips + 1)}>
+            <div className="card-container" style={{ transform: front ? "" : "rotateY(180deg)" }} >
                 <Front name={name} />
-                <Back url={url} live={!front} />
+                <Back details={details} />
             </div>
         </div>
     );
-}
+};
 
 /*
 export const Card = ({name, url}) => {
@@ -35,7 +46,7 @@ export const Card = ({name, url}) => {
              e.currentTarget.firstChild.style.transform !== 'rotateY(180deg)'
                 ? e.currentTarget.firstChild.style.transform = 'rotateY(180deg)'
                 : e.currentTarget.firstChild.style.transform = ''
-    
+
         }}>
             <div className="card-container">
                 <Front name={name} />
