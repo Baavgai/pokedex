@@ -4,6 +4,12 @@ Quick fork from [https://github.com/Adag1989/pokedex](https://github.com/Adag198
 
 Showing hooks, functional components, and async loads.
 
+## Changes (v fork 0.1.4)
+
+* Implemented useFetch hook.
+* Card does it's own loading.
+* Some component reorg.
+
 ## Changes (v fork 0.1.2)
 
 * Arrow notation for all.
@@ -12,5 +18,5 @@ Showing hooks, functional components, and async loads.
 
 ## To do
 
-* Better async loading.
-* Allow some kind of paging.
+Probably done.
+* ~~Allow some kind of paging.~~
