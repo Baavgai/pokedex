@@ -1,9 +1,11 @@
 import React from 'react';
+// import pokeLogo from './Photos/pokeLogo.png';
+// import pokeBall from './Photos/pokeball.png';
 import { capitalize } from '../helpers';
 
-const Backcard = ({details}) => {
-    console.log({f: "Backcard", details});
-    // const details = !props.name[props.number] ? '' : props.name[props.number]
+const CardBackLive = ({ url }) => {
+    const [fetchResult, loading] = useFetch(url);
+    console.log({ f: "CardBackLive", fetchResult });
     return (
         <div className={"card-back"}>
             <h4 className={'back-name'}>{!details ? 'hi' : capitalize(details.name)}</h4>
@@ -18,11 +20,14 @@ const Backcard = ({details}) => {
                 <h2 className={'type-head'}>Types</h2>
                 {!details
                     ? 'hi'
-                    : details.types.map((type, i) =><li key={i} className={'list-items'}>{capitalize(type.type.name)}</li>)
+                    : details.types.map((type, i) => <li key={i} className={'list-items'}>{capitalize(type.type.name)}</li>)
                 }
             </h4>
         </div>
     );
-}
+};
 
-export default Backcard;
+export const CardBack = ({ url, live }) =>
+    <div className="card-back">
+        {live ? <CardBackLive url={url} /> : <></>}
+    </div>;

@@ -1,9 +1,9 @@
 import React from 'react';
-import Cardcontainer from './Components/container';
+import { CardContainer} from './components/CardContainer';
 
 const App = () =>
-    <div className={'main-container'}>
-        <Cardcontainer />
+    <div className="main-container">
+        <CardContainer />
     </div>
     ;
 
