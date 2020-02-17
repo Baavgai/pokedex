@@ -1,33 +1,39 @@
 import React from 'react';
-// import pokeLogo from './Photos/pokeLogo.png';
-// import pokeBall from './Photos/pokeball.png';
-import { capitalize } from '../helpers';
+import { capitalize, useFetch } from '../helpers';
 
-const CardBackLive = ({ url }) => {
+const Container = ({ children }) =>
+    <div className="card-back">{children}</div>;
+
+// this is fundamenally wrong
+// const Sub = ({ className, children }) => <h4 className={className}>{children}</h4>;
+// const Sub2 = ({ className, children }) => <h2 className={className}>{children}</h2>;
+// figure it out in styles
+const Sub = ({ className, children }) => <div className={`${className || ''} card-sub`}>{children}</div>;
+const Sub2 = ({ className, children }) => <div className={`${className || ''} card-sub2`}>{children}</div>;
+
+const Loaded = ({ details }) =>
+    <Container>
+        <Sub className="back-name">{capitalize(details.name)}</Sub>
+        <img className="poke-pic2" alt="critterpic" src={`http://www.pokestadium.com/sprites/xy/${details.name}.gif`} />
+        <Sub className="back-num">#{details.id}</Sub>
+        <Sub className="moves">
+            <Sub2>Moves</Sub2>
+            <li className="move-list">{capitalize(details.moves[0].move.name)}</li>
+            <li className="move-list2">{capitalize(details.name === 'ditto' ? '' : details.moves[1].move.name)}</li>
+        </Sub>
+        <Sub className="types type-list">
+            <Sub2 className="type-head">Types</Sub2>
+            {details.types.map((type, i) => <li key={i} className="list-items">{capitalize(type.type.name)}</li>)}
+        </Sub>
+    </Container>
+    ;
+
+
+const Live = ({ url }) => {
     const [fetchResult, loading] = useFetch(url);
-    console.log({ f: "CardBackLive", fetchResult });
-    return (
-        <div className={"card-back"}>
-            <h4 className={'back-name'}>{!details ? 'hi' : capitalize(details.name)}</h4>
-            <img className={'poke-pic2'} alt="critterpic" src={!details ? 'loading...' : `http://www.pokestadium.com/sprites/xy/${details.name}.gif`} />
-            <h4 className={'back-num'}>{!details ? 'loading' : '#' + (details.id)}</h4>
-            <h4 className={'moves'}>
-                <h2>Moves</h2>
-                <li className={'move-list'}>{capitalize(!details.moves ? 'loading' : details.moves[0].move.name)}</li>
-                <li className={'move-list2'}>{capitalize(!details.name ? '' : details.name === 'ditto' ? '' : details.moves[1].move.name)}</li>
-            </h4>
-            <h4 className="types type-list">
-                <h2 className={'type-head'}>Types</h2>
-                {!details
-                    ? 'hi'
-                    : details.types.map((type, i) => <li key={i} className={'list-items'}>{capitalize(type.type.name)}</li>)
-                }
-            </h4>
-        </div>
-    );
+    console.log({ f: "Live", url, fetchResult, loading });
+    return loading ? <Container /> : <Loaded details={fetchResult} />;
 };
 
 export const CardBack = ({ url, live }) =>
-    <div className="card-back">
-        {live ? <CardBackLive url={url} /> : <></>}
-    </div>;
+    !live ? <Container /> : <Live url={url} />;
